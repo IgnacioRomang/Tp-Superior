@@ -1,5 +1,3 @@
-from operator import indexOf
-from tkinter import W
 import matplotlib.pyplot as plt
 import scipy.fftpack as sy  
 import sympy as sp
@@ -48,6 +46,16 @@ if __name__ == '__main__':
         plt.plot(n_discreta/10000,f_01_convolve/10000)
         plt.xlabel('n/10000')
         plt.ylabel('f[n]/10000')
+
+    plt.subplot(2,2,4)
+    q = sp.Symbol('q')
+    f_1 = u(q)
+    y_1 = sp.lambdify(q, f_1, modules=['numpy', 'sympy'])
+    f_01_convolve = np.convolve(calamar_pda,y_1(n))
+    n_discreta = np.arange(0,f_01_convolve.size, 1)
+    plt.plot(n_discreta/10000,f_01_convolve/10000)
+    plt.xlabel('n/10000')
+    plt.ylabel('f[n]/10000')
 
     plt.grid()
     plt.show()
