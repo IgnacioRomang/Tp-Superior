@@ -20,31 +20,62 @@ def u(x):
 def delta(x):
     return u(x)-u(x-1)
 
-if __name__ == '__main__':
-    ax = plt.subplot(2,2,1)
-    ax.set_title("Señales de Calamar")
+def ej2 ():
+    ax = plt.subplot(2,1,1)
+    plt.legend(loc='best')
     ax.plot(calamar_pda)
+    ax.set_title("Señal Calamar")
+    ax.set_xlabel("t [ms]")
+    ax.set_ylabel("f(calamar) [mV]")
     ax.grid()
-    f_fft= sy.fft(calamar_pda)
-
-
-    ax = plt.subplot(2,2,2)
-    ax.plot(n,np.fft.fftshift(f_fft))
-    ax.set_title("Transformada de Fourier (Shifted)")
-    ax.grid()
-
-    #ax.axis([0.006, 0.007, -1400, -1750])
-    plt.subplot(2,2,3)
-
-    w = sp.Symbol('w')
-    for i in range(1,10):
+    ax= plt.subplot(2,1,2)
+    
+    t = sp.Symbol('t')
+    
+    for i in [1,2,3,4]:
         a = i
-        f_1 = (u(w+a)-u(w-a))/(2*a)
-        y_1 = sp.lambdify(w, f_1, modules=['numpy', 'sympy'])
-        f_01_convolve = np.convolve(calamar_pda,y_1(n))
-        plt.plot(f_01_convolve)
-        plt.xlabel('n/10000')
-        plt.ylabel('f[n]/10000')
-
-    plt.grid()
+        f = (u(t+a)-u(t-a))/2*a
+        f_1 = sp.lambdify(t,f,['numpy'])
+        f_convolve= np.convolve(f_1(n),calamar_pda,mode="full")
+        ax.plot(f_convolve/1000, label = str(i))
+        
+    ax.set_title("Señal Calamar convolucionada con f1[n]")
+    ax.set_xlabel("t [ms]")
+    ax.set_ylabel("f(calamar) [mV] /1000")
+    ax.grid()
+    plt.legend(loc='best')
     plt.show()
+
+def ej3_1(r=0):
+    ax = plt.subplot(2,1,1)
+    plt.legend(loc='best')
+    ax.plot(calamar_pda)
+    ax.set_title("Señal Calamar")
+    ax.set_xlabel("t [ms]")
+    ax.set_ylabel("f(calamar) [mV]")
+    ax.grid()
+
+    ax= plt.subplot(2,1,2)
+    
+    t = sp.Symbol('t')
+    
+    for i in [400,800,900]:
+        b = i
+        f = 1/b * sp.sinc((t-r)/b)
+        f_1 = sp.lambdify(t,f,['numpy'])
+        f_convolve= np.convolve(f_1(n),calamar_pda,mode="full")
+        ax.plot(f_convolve, label = str(i))
+    st1 = "Señal Calamar convolucionada con f2[n]"
+    if(r!=0):
+        st1+= " con n=(n - "+ str(r) +")"
+    
+    ax.set_title(st1)
+    ax.set_xlabel("t [ms]")
+    ax.set_ylabel("f(calamar) [mV] /1000")
+    ax.grid()
+    plt.legend(loc='best')
+    plt.show()
+
+
+if __name__ == '__main__':
+    ej3_1()
