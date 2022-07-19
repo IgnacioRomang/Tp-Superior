@@ -23,7 +23,7 @@ def delta(x):
 if __name__ == '__main__':
     ax = plt.subplot(2,2,1)
     ax.set_title("Señales de Calamar")
-    ax.plot(n,calamar_pda)
+    ax.plot(calamar_pda)
     ax.grid()
     f_fft= sy.fft(calamar_pda)
 
@@ -42,20 +42,9 @@ if __name__ == '__main__':
         f_1 = (u(w+a)-u(w-a))/(2*a)
         y_1 = sp.lambdify(w, f_1, modules=['numpy', 'sympy'])
         f_01_convolve = np.convolve(calamar_pda,y_1(n))
-        n_discreta = np.arange(0,f_01_convolve.size, 1)
-        plt.plot(n_discreta/10000,f_01_convolve/10000)
+        plt.plot(f_01_convolve)
         plt.xlabel('n/10000')
         plt.ylabel('f[n]/10000')
-
-    plt.subplot(2,2,4)
-    q = sp.Symbol('q')
-    f_1 = u(q)
-    y_1 = sp.lambdify(q, f_1, modules=['numpy', 'sympy'])
-    f_01_convolve = np.convolve(calamar_pda,y_1(n))
-    n_discreta = np.arange(0,f_01_convolve.size, 1)
-    plt.plot(n_discreta/10000,f_01_convolve/10000)
-    plt.xlabel('n/10000')
-    plt.ylabel('f[n]/10000')
 
     plt.grid()
     plt.show()
