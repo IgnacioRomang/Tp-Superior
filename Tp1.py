@@ -80,35 +80,22 @@ def ej3_1(r=0):
 
 
 def otro():
-    ax = plt.subplot(3,1,1)
-    plt.legend(loc='best')
+    ax = plt.subplot(2,1,1)
     ax.plot(calamar_pda)
-    ax.set_title("Señal Calamar")
+    ax.set_title("Señal Calamar Filtrada y no Filtrada")
     ax.set_xlabel("t [ms]")
     ax.set_ylabel("f(calamar) [mV]")
     ax.grid()
-    ax= plt.subplot(3,1,2)
-    
-    t = sp.Symbol('t')
-    a = 5
-    f = (u(t+a)-u(t-a))/2*a
-    f_1 = sp.lambdify(t,f,['numpy'])
-    #sos = sg.butter(50, 135, 'lp', fs=1000, output='sos')
-    #f_convolve= sg.sosfiltfilt(sos,calamar_pda)
-    f_convolve = np.convolve(calamar_pda,f_1(n),mode="full")
-    ax.plot(f_convolve)
-        
-    ax.set_title("Señal Calamar convolucionada con f1[n]")
-    ax.set_xlabel("t [ms]")
-    ax.set_ylabel("f(calamar) [mV] /1000")
-    ax.grid()
-    ax= plt.subplot(3,1,3)
+    sos = sg.butter(50, 135, 'lp', fs=1000, output='sos')
+    f_convolve= sg.sosfiltfilt(sos,calamar_pda)
+    #f_convolve = np.convolve(calamar_pda,f_1(n),mode="full")
+    ax.plot(f_convolve,"r-")
+    ax= plt.subplot(2,1,2)
     #ax.set_xlim([-10, 10])
     #ax.set_ylim([, 5]) 
-    #ax.plot(np.fft.fftfreq(f_convolve.size,d=dn),np.fft.fft(f_convolve))
     ax.plot(np.fft.fftfreq(f_convolve.size,d=dn),np.fft.fft(f_convolve))
+    ax.grid()
     plt.show()
 
 if __name__ == '__main__':
-    ej3_1()
-    
+    otro()
