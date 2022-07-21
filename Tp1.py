@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import scipy.fftpack as sy  
+import scipy.signal as sg
 import sympy as sp
 import numpy as np
 
@@ -20,6 +21,7 @@ def u(x):
 def delta(x):
     return u(x)-u(x-1)
 
+
 def ej2 ():
     ax = plt.subplot(2,1,1)
     plt.legend(loc='best')
@@ -36,7 +38,7 @@ def ej2 ():
         a = i
         f = (u(t+a)-u(t-a))/2*a
         f_1 = sp.lambdify(t,f,['numpy'])
-        f_convolve= np.convolve(f_1(n),calamar_pda,mode="full")
+        f_convolve= np.convolve(f_1(n),calamar_pda,mode="same")
         ax.plot(f_convolve/1000, label = str(i))
         
     ax.set_title("Señal Calamar convolucionada con f1[n]")
@@ -77,5 +79,36 @@ def ej3_1(r=0):
     plt.show()
 
 
+def otro():
+    ax = plt.subplot(3,1,1)
+    plt.legend(loc='best')
+    ax.plot(calamar_pda)
+    ax.set_title("Señal Calamar")
+    ax.set_xlabel("t [ms]")
+    ax.set_ylabel("f(calamar) [mV]")
+    ax.grid()
+    ax= plt.subplot(3,1,2)
+    
+    t = sp.Symbol('t')
+    a = 5
+    f = (u(t+a)-u(t-a))/2*a
+    f_1 = sp.lambdify(t,f,['numpy'])
+    #sos = sg.butter(50, 135, 'lp', fs=1000, output='sos')
+    #f_convolve= sg.sosfiltfilt(sos,calamar_pda)
+    f_convolve = np.convolve(calamar_pda,f_1(n),mode="full")
+    ax.plot(f_convolve)
+        
+    ax.set_title("Señal Calamar convolucionada con f1[n]")
+    ax.set_xlabel("t [ms]")
+    ax.set_ylabel("f(calamar) [mV] /1000")
+    ax.grid()
+    ax= plt.subplot(3,1,3)
+    #ax.set_xlim([-10, 10])
+    #ax.set_ylim([, 5]) 
+    #ax.plot(np.fft.fftfreq(f_convolve.size,d=dn),np.fft.fft(f_convolve))
+    ax.plot(np.fft.fftfreq(f_convolve.size,d=dn),np.fft.fft(f_convolve))
+    plt.show()
+
 if __name__ == '__main__':
     ej3_1()
+    
